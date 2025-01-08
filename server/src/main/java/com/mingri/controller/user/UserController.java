@@ -1,31 +1,34 @@
 package com.mingri.controller.user;
 
 import com.mingri.constant.JwtClaimsConstant;
+import com.mingri.dto.UserDTO;
 import com.mingri.dto.UserLoginDTO;
 import com.mingri.dto.UserLoginDTO;
+import com.mingri.dto.UserPageQueryDTO;
 import com.mingri.entity.User;
 import com.mingri.properties.JwtProperties;
+import com.mingri.result.PageResult;
 import com.mingri.result.Result;
 import com.mingri.service.UserService;
 import com.mingri.service.UserService;
 import com.mingri.utils.JwtUtil;
 import com.mingri.vo.UserLoginVO;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
 import java.util.Map;
 
 /**
- * 员工管理
+ * 用户管理
  */
 @RestController
-@RequestMapping("/admin/user")
+@RequestMapping("/user")
 @Slf4j
+@Api(tags = "用户相关接口")
 public class UserController {
 
     @Autowired
@@ -39,9 +42,10 @@ public class UserController {
      * @param userLoginDTO
      * @return
      */
+    @ApiOperation("用户登录")
     @PostMapping("/login")
     public Result<UserLoginVO> login(@RequestBody UserLoginDTO userLoginDTO) {
-        log.info("员工登录：{}", userLoginDTO);
+        log.info("用户登录：{}", userLoginDTO);
 
         User user = userService.login(userLoginDTO);
 
@@ -68,9 +72,75 @@ public class UserController {
      *
      * @return
      */
+    @ApiOperation("用户退出")
     @PostMapping("/logout")
     public Result<String> logout() {
         return Result.success();
     }
 
+
+    /**
+     * 新增用户
+     * @param userDTO
+     * @return
+     */
+    @PostMapping
+    @ApiOperation("新增用户")
+    public Result save(@RequestBody UserDTO userDTO){
+        log.info("新增用户：{}",userDTO);
+        userService.save(userDTO);
+        return Result.success();
+    }
+
+    /**
+     * 用户分页查询
+     * @param userPageQueryDTO
+     * @return
+     */
+    @GetMapping("/page")
+    @ApiOperation("用户分页查询")
+    public Result<PageResult> page(UserPageQueryDTO userPageQueryDTO){
+        log.info("用户分页查询，参数为：{}", userPageQueryDTO);
+        PageResult pageResult = userService.pageQuery(userPageQueryDTO);
+        return Result.success(pageResult);
+    }
+
+    /**
+     * 启用禁用用户账号
+     * @param status
+     * @param id
+     * @return
+     */
+    @PostMapping("/status/{status}")
+    @ApiOperation("启用禁用用户账号")
+    public Result startOrStop(@PathVariable Integer status,Long id){
+        log.info("启用禁用用户账号：{},{}",status,id);
+        userService.startOrStop(status,id);
+        return Result.success();
+    }
+
+    /**
+     * 根据id查询用户信息
+     * @param id
+     * @return
+     */
+    @GetMapping("/{id}")
+    @ApiOperation("根据id查询用户信息")
+    public Result<User> getById(@PathVariable Long id){
+        User employee = userService.getById(id);
+        return Result.success(employee);
+    }
+
+    /**
+     * 编辑用户信息
+     * @param userDTO
+     * @return
+     */
+    @PutMapping
+    @ApiOperation("编辑用户信息")
+    public Result update(@RequestBody UserDTO userDTO){
+        log.info("编辑用户信息：{}", userDTO);
+        userService.update(userDTO);
+        return Result.success();
+    }
 }

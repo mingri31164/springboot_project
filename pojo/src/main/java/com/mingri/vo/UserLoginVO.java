@@ -13,7 +13,7 @@ import java.io.Serializable;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@ApiModel(description = "员工登录返回的数据格式")
+@ApiModel(description = "用户登录返回的数据格式")
 public class UserLoginVO implements Serializable {
 
     @ApiModelProperty("主键值")

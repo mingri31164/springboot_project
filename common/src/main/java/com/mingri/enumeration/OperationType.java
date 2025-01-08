@@ -1,7 +1,7 @@
 package com.mingri.enumeration;
 
 /**
- * 数据库操作类型
+ * 用于指定需要进行公共字段自动填充的数据库操作类型
  */
 public enum OperationType {
 
