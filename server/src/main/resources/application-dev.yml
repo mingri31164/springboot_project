@@ -1,0 +1,8 @@
+mingri:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    host: localhost
+    port: 3306
+    database: mingri_take_out
+    username: root
+    password: root
