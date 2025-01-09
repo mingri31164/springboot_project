@@ -1,5 +1,6 @@
 package com.mingri.annotation;
 
+
 import com.mingri.enumeration.OperationType;
 
 import java.lang.annotation.ElementType;
