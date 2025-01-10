@@ -50,7 +50,8 @@ public class UserServiceImpl implements UserService {
         }
 
         //密码比对
-        // TODO 后期需要进行md5加密，然后再进行比对
+        //对前端传过来的明文密码进行md5加密处理
+        password = DigestUtils.md5DigestAsHex(password.getBytes());
         if (!password.equals(user.getPassword())) {
             //密码错误
             throw new PasswordErrorException(MessageConstant.PASSWORD_ERROR);
@@ -147,7 +148,6 @@ public class UserServiceImpl implements UserService {
 
     /**
      * 编辑用户信息
-     *
      * @param userDTO
      */
     public void update(UserDTO userDTO) {
@@ -159,5 +159,6 @@ public class UserServiceImpl implements UserService {
 
         userMapper.update(employee);
     }
+
 
 }

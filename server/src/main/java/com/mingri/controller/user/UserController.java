@@ -1,6 +1,7 @@
 package com.mingri.controller.user;
 
 import com.mingri.constant.JwtClaimsConstant;
+import com.mingri.context.BaseContext;
 import com.mingri.dto.UserDTO;
 import com.mingri.dto.UserLoginDTO;
 import com.mingri.dto.UserLoginDTO;
@@ -38,7 +39,6 @@ public class UserController {
 
     /**
      * 登录
-     *
      * @param userLoginDTO
      * @return
      */
@@ -53,8 +53,8 @@ public class UserController {
         Map<String, Object> claims = new HashMap<>();
         claims.put(JwtClaimsConstant.USER_ID, user.getId());
         String token = JwtUtil.createJWT(
-                jwtProperties.getAdminSecretKey(),
-                jwtProperties.getAdminTtl(),
+                jwtProperties.getUserSecretKey(),
+                jwtProperties.getUserTtl(),
                 claims);
 
         UserLoginVO userLoginVO = UserLoginVO.builder()
@@ -67,14 +67,15 @@ public class UserController {
         return Result.success(userLoginVO);
     }
 
+
     /**
      * 退出
-     *
      * @return
      */
     @ApiOperation("用户退出")
     @PostMapping("/logout")
     public Result<String> logout() {
+        BaseContext.removeCurrentId();
         return Result.success();
     }
 
