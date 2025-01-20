@@ -167,7 +167,9 @@ public class UserServiceImpl implements UserService {
         User user = new User();
         //对象属性拷贝
         BeanUtils.copyProperties(userRegisterDTO, user);
-
+        //密码加密
+        user.setPassword(DigestUtils.md5DigestAsHex
+                (user.getPassword().getBytes()));
         //设置账号的状态，默认正常状态 1表示正常 0表示锁定
         user.setStatus(StatusConstant.ENABLE);
 
