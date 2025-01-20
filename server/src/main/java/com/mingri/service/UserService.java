@@ -1,9 +1,7 @@
 package com.mingri.service;
 
-import com.mingri.dto.UserDTO;
+import com.mingri.dto.*;
 import com.mingri.dto.UserLoginDTO;
-import com.mingri.dto.UserLoginDTO;
-import com.mingri.dto.UserPageQueryDTO;
 import com.mingri.entity.User;
 import com.mingri.result.PageResult;
 
@@ -49,4 +47,9 @@ public interface UserService {
      */
     void update(UserDTO userDTO);
 
+    /**
+     * 用户注册
+     * @param userRegisterDTO
+     */
+    void register(UserRegisterDTO userRegisterDTO);
 }

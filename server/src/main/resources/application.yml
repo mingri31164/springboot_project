@@ -19,6 +19,7 @@ spring:
     password: ${mingri.redis.password}
     database: ${mingri.redis.database}
 
+
 mybatis:
   #mapper配置文件
   mapper-locations: classpath:mapper/*.xml
@@ -42,13 +43,22 @@ mingri:
     # 设置jwt过期时间
     admin-ttl: 7200000
     # 设置前端传递过来的令牌名称
-    admin-token-name: tok
+    admin-token-name: admin
     user-secret-key: csd_user
     user-ttl: 7200000
-    user-token-name: token
-
+    user-token-name: user
   alioss:
-    endpoint: ${sky.alioss.endpoint}
-    access-key-id: ${sky.alioss.access-key-id}
-    access-key-secret: ${sky.alioss.access-key-secret}
-    bucket-name: ${sky.alioss.bucket-name}
+    endpoint: ${mingri.alioss.endpoint}
+    access-key-id: ${mingri.alioss.access-key-id}
+    access-key-secret: ${mingri.alioss.access-key-secret}
+    bucket-name: ${mingri.alioss.bucket-name}
+captcha:
+  email:
+    from: ${mingri.mail.from}
+    password: ${mingri.mail.password}
+    host: ${mingri.mail.host}
+    port: ${mingri.mail.port}
+    user: ${mingri.mail.user}
+    expire-time: ${mingri.mail.expireTime}
+
+

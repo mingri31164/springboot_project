@@ -1,8 +1,6 @@
 package com.mingri.config;
 
 import com.mingri.properties.AliOssProperties;
-import com.mingri.properties.AliOssProperties;
-import com.mingri.utils.AliOssUtil;
 import com.mingri.utils.AliOssUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
@@ -25,4 +23,5 @@ public class OssConfiguration {
                 aliOssProperties.getAccessKeySecret(),
                 aliOssProperties.getBucketName());
     }
+
 }

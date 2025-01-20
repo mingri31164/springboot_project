@@ -12,8 +12,6 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.InputStream;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
 
 @Service
 @Slf4j
@@ -36,7 +34,7 @@ public class ReportServiceImpl implements ReportService {
 
         //2. 通过POI将数据写入到Excel文件中
         InputStream in = this.getClass().getClassLoader()
-                .getResourceAsStream("template/打卡数据报表模板.xlsx");
+                .getResourceAsStream("templates/打卡数据报表模板.xlsx");
 
         try {
             //基于模板文件创建一个新的Excel文件

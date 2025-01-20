@@ -24,9 +24,9 @@ public interface UserMapper {
      * 插入用户数据
      * @param user
      */
-    @Insert("insert into users (name, username, password, phone, sex, id_number, create_time, update_time, create_user, update_user,status) " +
+    @Insert("insert into users (name, username, password, phone, email, sex, id_number, create_time, update_time, create_user, update_user,status) " +
             "values " +
-            "(#{name},#{username},#{password},#{phone},#{sex},#{idNumber},#{createTime},#{updateTime},#{createUser},#{updateUser},#{status})")
+            "(#{name},#{username},#{password},#{phone},#{email},#{sex},#{idNumber},#{createTime},#{updateTime},#{createUser},#{updateUser},#{status})")
     @AutoFill(value = OperationType.INSERT)
     void insert(User employee);
 
@@ -52,4 +52,11 @@ public interface UserMapper {
     @Select("select * from users where id = #{id}")
     User getById(Long id);
 
+    /**
+     * 检查用户名是否重复
+     * @param username
+     * @return
+     */
+    @Select("select count(1) from users where username = #{username}")
+    boolean existsByUsername(String username);
 }

@@ -4,13 +4,12 @@ import com.mingri.constant.JwtClaimsConstant;
 import com.mingri.context.BaseContext;
 import com.mingri.dto.UserDTO;
 import com.mingri.dto.UserLoginDTO;
-import com.mingri.dto.UserLoginDTO;
 import com.mingri.dto.UserPageQueryDTO;
+import com.mingri.dto.UserRegisterDTO;
 import com.mingri.entity.User;
 import com.mingri.properties.JwtProperties;
 import com.mingri.result.PageResult;
 import com.mingri.result.Result;
-import com.mingri.service.UserService;
 import com.mingri.service.UserService;
 import com.mingri.utils.JwtUtil;
 import com.mingri.vo.UserLoginVO;
@@ -20,7 +19,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
@@ -71,6 +69,20 @@ public class UserController {
                 .build();
 
         return Result.success(userLoginVO);
+    }
+
+
+    /**
+     * @Description: 用户注册
+     * @Author: mingri31164
+     * @Date: 2025/1/20 18:13
+     **/
+    @PostMapping("/register")
+    @ApiOperation("用户注册")
+    public Result register(@RequestBody UserRegisterDTO userRegisterDTO){
+        log.info("新增用户：{}",userRegisterDTO);
+        userService.register(userRegisterDTO);
+        return Result.success();
     }
 
 

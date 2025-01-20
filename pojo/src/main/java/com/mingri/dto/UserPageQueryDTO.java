@@ -7,9 +7,6 @@ import java.io.Serializable;
 @Data
 public class UserPageQueryDTO implements Serializable {
 
-    //用户姓名
-    private String name;
-
     //页码
     private int page;
 

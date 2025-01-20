@@ -2,21 +2,20 @@ package com.mingri.service.impl;
 
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
+import com.mingri.constant.MailConstant;
 import com.mingri.constant.MessageConstant;
 import com.mingri.constant.PasswordConstant;
 import com.mingri.constant.StatusConstant;
-import com.mingri.dto.UserDTO;
+import com.mingri.dto.*;
 import com.mingri.dto.UserLoginDTO;
-import com.mingri.dto.UserLoginDTO;
-import com.mingri.dto.UserPageQueryDTO;
 import com.mingri.entity.User;
-import com.mingri.exception.AccountLockedException;
-import com.mingri.exception.AccountNotFoundException;
-import com.mingri.exception.PasswordErrorException;
+import com.mingri.exception.*;
 import com.mingri.mapper.UserMapper;
 import com.mingri.mapper.UserMapper;
 import com.mingri.result.PageResult;
 import com.mingri.service.UserService;
+import com.mingri.utils.RedisUtils;
+import io.lettuce.core.RedisException;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -29,6 +28,8 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     private UserMapper userMapper;
+    @Autowired
+    private RedisUtils redisUtils;
 
     /**
      * 用户登录
@@ -83,14 +84,6 @@ public class UserServiceImpl implements UserService {
         //设置密码，默认密码123456
         employee.setPassword(DigestUtils.md5DigestAsHex(PasswordConstant.DEFAULT_PASSWORD.getBytes()));
 
-        //设置当前记录的创建时间和修改时间
-        //employee.setCreateTime(LocalDateTime.now());
-        //employee.setUpdateTime(LocalDateTime.now());
-
-        //设置当前记录创建人id和修改人id
-        //employee.setCreateUser(BaseContext.getCurrentId());
-        //employee.setUpdateUser(BaseContext.getCurrentId());
-
         userMapper.insert(employee);
     }
 
@@ -120,12 +113,6 @@ public class UserServiceImpl implements UserService {
      * @param id
      */
     public void startOrStop(Integer status, Long id) {
-        // update employee set status = ? where id = ?
-
-        /*Employee employee = new Employee();
-        employee.setStatus(status);
-        employee.setId(id);*/
-
         User employee = User.builder()
                 .status(status)
                 .id(id)
@@ -153,11 +140,38 @@ public class UserServiceImpl implements UserService {
     public void update(UserDTO userDTO) {
         User employee = new User();
         BeanUtils.copyProperties(userDTO, employee);
-
-        //employee.setUpdateTime(LocalDateTime.now());
-        //employee.setUpdateUser(BaseContext.getCurrentId());
-
         userMapper.update(employee);
+    }
+
+    public void register(UserRegisterDTO userRegisterDTO) {
+        // 检查用户名是否已存在
+        if (userMapper.existsByUsername(userRegisterDTO.getUsername())) {
+            throw new RegisterFailedException(MessageConstant.ACCOUNT_EXIST);
+        }
+        //TODO 邮箱重复处理
+//        if (userMapper.existsByEmail(userRegisterDTO.getEmail())) {
+//            throw new RegisterFailedException(MessageConstant.ACCOUNT_EXIST);
+//        }
+        // 根据邮箱生成Redis键名
+        String redisKey = MailConstant.CAPTCHA_CODE_KEY_PRE + userRegisterDTO.getEmail();
+        // 尝试从Redis获取现有的验证码
+        Object oldCode = redisUtils.get(redisKey);
+        if (oldCode == null){
+            throw new EmailErrorException
+                    (MessageConstant.PLEASE_GET_VERIFICATION_CODE_FIRST);
+        }
+        if (userRegisterDTO.getEmailCode() == null || !oldCode.equals(userRegisterDTO.getEmailCode())){
+            throw new EmailErrorException
+                    (MessageConstant.EMAIL_VERIFICATION_CODE_ERROR);
+        }
+        User user = new User();
+        //对象属性拷贝
+        BeanUtils.copyProperties(userRegisterDTO, user);
+
+        //设置账号的状态，默认正常状态 1表示正常 0表示锁定
+        user.setStatus(StatusConstant.ENABLE);
+
+        userMapper.insert(user);
     }
 
 
