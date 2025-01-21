@@ -20,6 +20,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
@@ -89,10 +90,10 @@ public class UserController {
      * 退出
      * @return
      */
-    @ApiOperation("用户退出")
+    @ApiOperation("退出登录")
     @PostMapping("/logout")
     public Result<String> logout() {
-        BaseContext.removeCurrentId();
+        userService.logout();
         return Result.success();
     }
 
@@ -118,6 +119,7 @@ public class UserController {
     @GetMapping("/page")
     @ApiOperation("用户分页查询")
     @Cacheable(cacheNames = "userPageCache")
+    @PreAuthorize("hasAnyAuthority('admin')")
     public Result<PageResult> page(UserPageQueryDTO userPageQueryDTO){
         log.info("用户分页查询，参数为：{}", userPageQueryDTO);
         PageResult pageResult = userService.pageQuery(userPageQueryDTO);

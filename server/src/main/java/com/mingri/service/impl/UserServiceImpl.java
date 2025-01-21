@@ -19,6 +19,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -27,6 +28,8 @@ import org.springframework.util.DigestUtils;
 import org.springframework.security.core.userdetails.UserDetailsService;
 
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
@@ -210,7 +213,15 @@ public class UserServiceImpl implements UserService,UserDetailsService{
 
         //把查询到的user结果，封装成UserDetails类型，然后返回。
         //但是由于UserDetails是个接口，所以我们需要先新建LoginUser类，作为UserDetails的实现类
-        return new LoginUser(user);
+
+        // 查询用户权限信息
+        //由于我们自定义了3个权限，所以用List集合存储。注意权限实际就是'有特殊含义的字符串'，所以下面的三个字符串就是自定义的
+        //下面那行就是我们的权限集合，等下还要在LoginUser类做权限集合的转换
+        List<String> list = new ArrayList<>(Arrays.asList("test","admin","user"));
+
+        //把查询到的user结果，封装成UserDetails类型，然后返回。
+        //但是由于UserDetails是个接口，所以我们先需要在domino目录新建LoginUser类，作为UserDetails的实现类，再写下面那行
+        return new LoginUser(user,list); //这里传了第二个参数，表示的是权限信息
     }
 
 
@@ -246,5 +257,25 @@ public class UserServiceImpl implements UserService,UserDetailsService{
             // 认证失败处理
             throw new LoginFailedException(MessageConstant.LOGIN_ERROR);
         }
+    }
+
+
+    /**
+     * @Description: 用户退出登录
+     * @Author: mingri31164
+     * @Date: 2025/1/21 21:36
+     **/
+    public void logout() {
+        //获取我们在JwtAuthenticationTokenFilter类写的SecurityContextHolder对象中的用户id
+        UsernamePasswordAuthenticationToken authentication = (UsernamePasswordAuthenticationToken)
+                SecurityContextHolder.getContext().getAuthentication();
+        //loginUser是我们在domain目录写好的实体类
+        LoginUser loginUser = (LoginUser) authentication.getPrincipal();
+        //获取用户id
+        Long userid = loginUser.getUser().getId();
+
+        //根据用户id，删除redis中的token值，注意我们的key是被 login: 拼接过的，所以下面写完整key的时候要带上 longin:
+        String key = RedisConstant.USER_INFO_PREFIX + userid.toString();
+        redisUtils.del(key);
     }
 }

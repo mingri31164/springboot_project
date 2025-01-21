@@ -53,4 +53,9 @@ public interface UserService {
      * @param userRegisterDTO
      */
     void register(UserRegisterDTO userRegisterDTO);
+
+    /**
+     * 用户退出
+     */
+    void logout();
 }

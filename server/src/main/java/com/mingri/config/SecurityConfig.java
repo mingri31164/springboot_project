@@ -7,6 +7,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -17,11 +18,13 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 @Configuration
 @EnableWebSecurity
+@EnableGlobalMethodSecurity(prePostEnabled = true)
 public class SecurityConfig  {
 
 	@Autowired
 	//注入我们在filter目录写好的类
 	private JwtAuthenticationTokenFilter jwtAuthenticationTokenFilter;
+
 	@Bean
 	public PasswordEncoder passwordEncoder() {
 		return new BCryptPasswordEncoder();
@@ -43,13 +46,14 @@ public class SecurityConfig  {
 				.and()
 				.authorizeRequests()
 				.antMatchers("/user/login","/user/register",
-						"/common/*",    "/v2/api-docs",
+						"/common/*",
+						"/v2/api-docs",
 						"/swagger-resources/configuration/ui",
 						"/swagger-resources",
 						"/swagger-resources/configuration/security",
 						"/doc.html",
 						"/swagger-ui.html",
-						"/webjars/**").anonymous() // 登录接口允许匿名访问
+						"/webjars/**").anonymous() // 接口允许匿名访问（已登录不可访问，未登录可以）
 				.anyRequest().authenticated(); // 其他请求需要认证
 		//把token校验过滤器添加到过滤器链中
 		//第一个参数是上面注入的我们在filter目录写好的类，第二个参数表示你想添加到哪个过滤器之前
