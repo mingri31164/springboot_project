@@ -46,7 +46,7 @@ mingri:
     admin-token-name: admin
     user-secret-key: csd_user
     user-ttl: 7200000
-    user-token-name: user
+    user-token-name: token
   alioss:
     endpoint: ${mingri.alioss.endpoint}
     access-key-id: ${mingri.alioss.access-key-id}

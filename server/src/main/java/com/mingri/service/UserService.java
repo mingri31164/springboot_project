@@ -2,6 +2,7 @@ package com.mingri.service;
 
 import com.mingri.dto.*;
 import com.mingri.dto.UserLoginDTO;
+import com.mingri.entity.LoginUser;
 import com.mingri.entity.User;
 import com.mingri.result.PageResult;
 
@@ -12,7 +13,7 @@ public interface UserService {
      * @param userLoginDTO
      * @return
      */
-    User login(UserLoginDTO userLoginDTO);
+    LoginUser login(UserLoginDTO userLoginDTO);
 
     /**
      * 新增用户

@@ -2,13 +2,10 @@ package com.mingri.controller.common;
 
 import com.mingri.constant.MessageConstant;
 import com.mingri.result.Result;
-import com.mingri.service.CaptchaService;
+import com.mingri.service.CommonService;
 import com.mingri.utils.AliOssUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -32,7 +29,7 @@ public class CommonController {
     @Autowired
     private AliOssUtil aliOssUtil;
     @Autowired
-    private CaptchaService captchaService;
+    private CommonService commonService;
 
 
     /**
@@ -71,7 +68,7 @@ public class CommonController {
         @ApiOperation("发送邮箱验证码")
         @GetMapping("/email-captcha")
         public Result<String> sendEmailCaptcha(String email) {
-            captchaService.sendEmailCaptcha(email);
+            commonService.sendEmailCaptcha(email);
             return Result.success("发送成功");
         }
 

@@ -6,6 +6,7 @@ import com.mingri.dto.UserDTO;
 import com.mingri.dto.UserLoginDTO;
 import com.mingri.dto.UserPageQueryDTO;
 import com.mingri.dto.UserRegisterDTO;
+import com.mingri.entity.LoginUser;
 import com.mingri.entity.User;
 import com.mingri.properties.JwtProperties;
 import com.mingri.result.PageResult;
@@ -38,8 +39,6 @@ public class UserController {
     private UserService userService;
     @Autowired
     private JwtProperties jwtProperties;
-    @Autowired
-    private RedisTemplate redisTemplate;
 
     /**
      * 登录
@@ -51,20 +50,20 @@ public class UserController {
     public Result<UserLoginVO> login(@RequestBody UserLoginDTO userLoginDTO) {
         log.info("用户登录：{}", userLoginDTO);
 
-        User user = userService.login(userLoginDTO);
+        LoginUser loginUser = userService.login(userLoginDTO);
 
         //登录成功后，生成jwt令牌
         Map<String, Object> claims = new HashMap<>();
-        claims.put(JwtClaimsConstant.USER_ID, user.getId());
+        claims.put(JwtClaimsConstant.USER_ID, loginUser.getUser().getId());
         String token = JwtUtil.createJWT(
                 jwtProperties.getUserSecretKey(),
                 jwtProperties.getUserTtl(),
                 claims);
 
         UserLoginVO userLoginVO = UserLoginVO.builder()
-                .id(user.getId())
-                .userName(user.getUsername())
-                .name(user.getName())
+                .id(loginUser.getUser().getId())
+                .userName(loginUser.getUsername())
+                .name(loginUser.getUser().getName())
                 .token(token)
                 .build();
 
@@ -164,13 +163,4 @@ public class UserController {
         return Result.success();
     }
 
-
-    /**
-     * 清理缓存数据
-     * @param pattern
-     */
-    private void cleanCache(String pattern){
-        Set keys = redisTemplate.keys(pattern);
-        redisTemplate.delete(keys);
-    }
 }

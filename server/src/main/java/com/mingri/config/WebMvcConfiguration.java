@@ -1,6 +1,5 @@
 package com.mingri.config;
 
-import com.mingri.interceptor.JwtTokenAdminInterceptor;
 import com.mingri.interceptor.JwtTokenUserInterceptor;
 import com.mingri.json.JacksonObjectMapper;
 import lombok.extern.slf4j.Slf4j;
@@ -28,8 +27,6 @@ import java.util.List;
 @Slf4j
 public class WebMvcConfiguration extends WebMvcConfigurationSupport {
 
-    @Autowired
-    private JwtTokenAdminInterceptor jwtTokenAdminInterceptor;
     @Autowired
     private JwtTokenUserInterceptor jwtTokenUserInterceptor;
 

@@ -6,7 +6,7 @@ import com.mingri.constant.MailConstant;
 import com.mingri.constant.MessageConstant;
 import com.mingri.exception.EmailErrorException;
 import com.mingri.properties.EmailProperties;
-import com.mingri.service.CaptchaService;
+import com.mingri.service.CommonService;
 import com.mingri.utils.RedisUtils;
 import com.mingri.utils.VerifyCodeUtil;
 import io.lettuce.core.RedisException;
@@ -29,7 +29,7 @@ import java.util.List;
 @Service
 @Slf4j
 @RequiredArgsConstructor
-public class CaptchaServiceImpl implements CaptchaService {
+public class CaptchaServiceImpl implements CommonService {
 
     private final EmailProperties emailProperties;
     private final RedisUtils redisUtils;
