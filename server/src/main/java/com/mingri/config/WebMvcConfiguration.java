@@ -1,6 +1,6 @@
 package com.mingri.config;
 
-import com.mingri.interceptor.JwtTokenUserInterceptor;
+import com.mingri.interceptor.JwtAuthenticationTokenFilter;
 import com.mingri.json.JacksonObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,7 +8,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
-import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurationSupport;
 import springfox.documentation.builders.ApiInfoBuilder;
@@ -28,21 +27,21 @@ import java.util.List;
 public class WebMvcConfiguration extends WebMvcConfigurationSupport {
 
     @Autowired
-    private JwtTokenUserInterceptor jwtTokenUserInterceptor;
+    private JwtAuthenticationTokenFilter jwtTokenUserInterceptor;
 
     /**
      * 注册自定义拦截器
      *
      * @param registry
      */
-    protected void addInterceptors(InterceptorRegistry registry) {
-        log.info("开始注册自定义拦截器...");
-        registry.addInterceptor(jwtTokenUserInterceptor)
-                .addPathPatterns("/user/**")
-                .addPathPatterns("/admin/**")
-                .excludePathPatterns("/user/login")
-                .excludePathPatterns("/user/register");//指定不需要被拦截器拦截的路径
-    }
+//    protected void addInterceptors(InterceptorRegistry registry) {
+//        log.info("开始注册自定义拦截器...");
+//        registry.addInterceptor(jwtTokenUserInterceptor)
+//                .addPathPatterns("/user/**")
+//                .addPathPatterns("/admin/**")
+//                .excludePathPatterns("/user/login")
+//                .excludePathPatterns("/user/register");//指定不需要被拦截器拦截的路径
+//    }
 
     /**
      * 通过knife4j生成接口文档

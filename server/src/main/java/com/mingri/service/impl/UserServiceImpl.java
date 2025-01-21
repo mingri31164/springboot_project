@@ -238,7 +238,8 @@ public class UserServiceImpl implements UserService,UserDetailsService{
             }
 
             // 把完整的用户信息存入 Redis，其中 userid 作为 key
-            redisUtils.set(RedisConstant.USER_INFO_PREFIX + loginUser.getUser().getId().toString(), loginUser);
+            redisUtils.set(RedisConstant.USER_INFO_PREFIX +
+                    loginUser.getUser().getId().toString(), loginUser);
             return loginUser;
 
         } catch (AuthenticationException e) {

@@ -22,5 +22,6 @@ public class MessageConstant {
     public static final String EMAIL_VERIFICATION_CODE = "注册账号验证码";
     public static final String EMAIL_VERIFICATION_CODE_ERROR = "验证码校验错误";
     public static final String PLEASE_GET_VERIFICATION_CODE_FIRST = "请先获取验证码";
+    public static final String TOKEN_ERROR = "token校验失败";
 
 }
