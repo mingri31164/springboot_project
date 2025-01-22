@@ -13,7 +13,7 @@ import com.mingri.properties.JwtProperties;
 import com.mingri.result.Result;
 import com.mingri.service.ISysUserService;
 import com.mingri.utils.JwtUtil;
-import com.mingri.vo.PageVO;
+import com.mingri.result.PageResult;
 import com.mingri.vo.SysInfoVO;
 import com.mingri.vo.SysUserLoginVO;
 import io.swagger.annotations.Api;
@@ -22,7 +22,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
@@ -115,11 +114,11 @@ public class SysUserController {
     @ApiOperation("用户分页查询")
     @Cacheable(cacheNames = "userPageCache")
 // @PreAuthorize("hasAnyAuthority('admin')")
-    public PageVO<SysInfoVO> page(@RequestBody PageQuery query) {
+    public PageResult<SysInfoVO> page(@RequestBody PageQuery query) {
         // 1. 分页查询
         Page<SysUser> result = iSysUserService.page(query.toMpPage("update_time", false));
         // 2. 封装并返回
-        return PageVO.of(result, SysInfoVO.class);
+        return PageResult.of(result, SysInfoVO.class);
     }
 
 

@@ -23,5 +23,7 @@ public class MessageConstant {
     public static final String EMAIL_VERIFICATION_CODE_ERROR = "验证码校验错误";
     public static final String PLEASE_GET_VERIFICATION_CODE_FIRST = "请先获取验证码";
     public static final String TOKEN_ERROR = "token校验失败";
+    public static final String AUTHENTICATION_FAILED = "用户认证失败，请重新登录";
+    public static final String PERMISSION_NOT_EXIST = "没有权限";
 
 }

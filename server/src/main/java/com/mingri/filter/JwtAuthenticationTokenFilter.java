@@ -1,4 +1,4 @@
-package com.mingri.interceptor;
+package com.mingri.filter;
 
 
 import com.mingri.constant.JwtClaimsConstant;
@@ -37,44 +37,6 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
     private JwtProperties jwtProperties;
     @Autowired
     private RedisUtils redisUtils;
-
-//    /**
-//     * 校验jwt
-//     *
-//     * @param request
-//     * @param response
-//     * @param handler
-//     * @return
-//     * @throws Exception
-//     */
-//    public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-//        //判断当前拦截到的是Controller的方法还是其他资源
-//        if (!(handler instanceof HandlerMethod)) {
-//            //当前拦截到的不是动态方法，直接放行
-//            return true;
-//        }
-//
-//        //1、从请求头中获取令牌
-//        String token = request.getHeader(jwtProperties.getUserTokenName());
-//
-//        //2、校验令牌
-//        try {
-//            log.info("jwt校验:{}", token);
-//            Claims claims = JwtUtil.parseJWT(jwtProperties.getUserSecretKey(), token);
-//            Object claims_userid = claims.get(JwtClaimsConstant.USER_ID);
-//            log.info("jwt校验通过: {}",claims_userid);
-//            Long userId = Long.valueOf(claims.get(JwtClaimsConstant.USER_ID).toString());
-//            log.info("当前用户的id：{}", userId);
-//            BaseContext.setCurrentId(userId);
-//            //3、通过，放行
-//            return true;
-//        } catch (Exception ex) {
-//            //4、不通过，响应401状态码
-//            response.setStatus(401);
-//            return false;
-//        }
-//    }
-
 
     /**
      * @Description: 过滤器拦截请求
@@ -117,7 +79,6 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
         }
 
         // 将用户信息放入 SecurityContextHolder
-        //TODO 获取权限信息封装到Authentication中
         UsernamePasswordAuthenticationToken authenticationToken =
                 new UsernamePasswordAuthenticationToken(loginUser,
                         null, loginUser.getAuthorities());

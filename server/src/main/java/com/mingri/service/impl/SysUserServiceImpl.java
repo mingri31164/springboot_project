@@ -11,6 +11,7 @@ import com.mingri.enumeration.UserStatus;
 import com.mingri.exception.EmailErrorException;
 import com.mingri.exception.LoginFailedException;
 import com.mingri.exception.RegisterFailedException;
+import com.mingri.mapper.SysMenuMapper;
 import com.mingri.mapper.SysUserMapper;
 import com.mingri.service.ISysUserService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -50,6 +51,8 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
     private AuthenticationManager authenticationManager;
     @Autowired
     private PasswordEncoder passwordEncoder;
+    @Autowired
+    private SysMenuMapper sysMenuMapper;
 
     /**
      * 用户登录（md5）
@@ -130,6 +133,11 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
     }
 
 
+    /**
+     * @Description: 重写security过滤器中的方法，改为从数据库查询用户信息
+     * @Author: mingri31164
+     * @Date: 2025/1/22 22:57
+     **/
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         //根据用户名查询数据库中的数据
@@ -142,12 +150,11 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
         //但是由于UserDetails是个接口，所以我们需要先新建LoginUser类，作为UserDetails的实现类
 
         // 查询用户权限信息
-        //由于我们自定义了3个权限，所以用List集合存储。注意权限实际就是'有特殊含义的字符串'，所以下面的三个字符串就是自定义的
-        //下面那行就是我们的权限集合，等下还要在LoginUser类做权限集合的转换
-        List<String> list = new ArrayList<>(Arrays.asList("test","admin","user"));
+        //权限集合，在LoginUser类做权限集合的转换
+//        List<String> list = new ArrayList<>(Arrays.asList("test","admin","user"));
+        List<String> list = sysMenuMapper.selectPermsByUserId(sysUser.getId());
 
-        //把查询到的user结果，封装成UserDetails类型，然后返回。
-        //但是由于UserDetails是个接口，所以我们先需要在domino目录新建LoginUser类，作为UserDetails的实现类，再写下面那行
+        //把查询到的user结果，封装成UserDetails类型返回
         return new LoginUser(sysUser,list); //这里传了第二个参数，表示的是权限信息
     }
 

@@ -1,6 +1,5 @@
 package com.mingri.config;
 
-import com.mingri.interceptor.JwtAuthenticationTokenFilter;
 import com.mingri.json.JacksonObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,9 +24,6 @@ import java.util.List;
 @Configuration
 @Slf4j
 public class WebMvcConfiguration extends WebMvcConfigurationSupport {
-
-    @Autowired
-    private JwtAuthenticationTokenFilter jwtTokenUserInterceptor;
 
     /**
      * 注册自定义拦截器

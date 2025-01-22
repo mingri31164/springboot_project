@@ -12,7 +12,9 @@ import org.springframework.web.bind.annotation.RestController;
 public class HelloController {
 
     @RequestMapping("/hello")
-    @PreAuthorize("hasAnyAuthority('test')")
+    @PreAuthorize("hasAuthority('system:dept:list')") //单个权限
+//    @PreAuthorize("hasAnyAuthority('user','admin')") //多个权限（只要有其中之一）
+//    @PreAuthorize("hasRole('user')") //内部拼接(ROLE_user)比对
     public String hello(){
         return "欢迎，开始你新的学习旅程吧";
     }
