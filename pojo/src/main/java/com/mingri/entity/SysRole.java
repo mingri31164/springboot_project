@@ -1,8 +1,7 @@
 package com.mingri.entity;
 
-import com.baomidou.mybatisplus.annotation.TableName;
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.*;
+
 import java.time.LocalDateTime;
 import java.io.Serializable;
 
@@ -44,12 +43,20 @@ public class SysRole implements Serializable {
     @ApiModelProperty(value = "del_flag")
     private Integer delFlag;
 
+    @ApiModelProperty(value = "创建者")
+    @TableField(value = "create_By",fill = FieldFill.INSERT)
     private Long createBy;
 
+    @ApiModelProperty(value = "创建时间")
+    @TableField(value = "create_time",fill = FieldFill.INSERT)
     private LocalDateTime createTime;
 
+    @ApiModelProperty(value = "更新者")
+    @TableField(value = "update_By",fill = FieldFill.UPDATE)
     private Long updateBy;
 
+    @ApiModelProperty(value = "更新时间")
+    @TableField(value = "update_time",fill = FieldFill.UPDATE)
     private LocalDateTime updateTime;
 
     @ApiModelProperty(value = "备注")
