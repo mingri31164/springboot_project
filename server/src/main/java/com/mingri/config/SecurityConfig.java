@@ -58,7 +58,8 @@ public class SecurityConfig  {
 						"/swagger-resources/configuration/security",
 						"/doc.html",
 						"/swagger-ui.html",
-						"/webjars/**").anonymous() // 接口允许匿名访问（已登录不可访问，未登录可以）
+						"/webjars/**").anonymous()// 接口允许匿名访问（已登录不可访问，未登录可以）
+//				.antMatchers("/sys-user").hasAuthority("system:dept:list") //配置指定路径接口需要权限访问
 				.anyRequest().authenticated(); // 其他请求需要认证
 
 		//把token校验过滤器添加到过滤器链中

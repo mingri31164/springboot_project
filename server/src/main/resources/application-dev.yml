@@ -23,4 +23,9 @@ mingri:
     port: 465
     user: 3116430062@qq.com
     expireTime: 180 #3分钟
+  jwt:
+    secret-key: csd_admin
+    expire-time: 7200000
+    token-name: token
+
 

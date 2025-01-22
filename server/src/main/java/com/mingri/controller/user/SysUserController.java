@@ -63,8 +63,8 @@ public class SysUserController {
         Map<String, Object> claims = new HashMap<>();
         claims.put(JwtClaimsConstant.USER_ID, loginUser.getSysUser().getId());
         String token = JwtUtil.createJWT(
-                jwtProperties.getUserSecretKey(),
-                jwtProperties.getUserTtl(),
+                jwtProperties.getSecretKey(),
+                jwtProperties.getExpireTime(),
                 claims);
 
         SysUserLoginVO userLoginVO = SysUserLoginVO.builder()

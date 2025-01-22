@@ -27,7 +27,6 @@ public class ReportController {
     @Autowired
     private ReportService reportService;
 
-
     /**
      * 导出数据报表
      * @param response
@@ -37,4 +36,5 @@ public class ReportController {
     public void export(HttpServletResponse response){
         reportService.exportClockData(response);
     }
+
 }

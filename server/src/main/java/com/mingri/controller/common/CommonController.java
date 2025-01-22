@@ -3,6 +3,7 @@ package com.mingri.controller.common;
 import com.mingri.constant.MessageConstant;
 import com.mingri.result.Result;
 import com.mingri.service.CommonService;
+import com.mingri.service.ReportService;
 import com.mingri.utils.AliOssUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.UUID;
 
@@ -59,6 +61,8 @@ public class CommonController {
 
         return Result.error(MessageConstant.UPLOAD_FAILED);
     }
+
+
 
     /**
      * @Description: 发送邮箱验证码

@@ -40,7 +40,6 @@ mybatis-plus:
     # 全局枚举处理器
     default-enum-type-handler: com.baomidou.mybatisplus.core.handlers.MybatisEnumTypeHandler
 
-
 logging:
   level:
     com:
@@ -50,21 +49,12 @@ logging:
         controller: info
 
 mingri:
-  jwt:
-    # 设置jwt签名加密时使用的秘钥
-    admin-secret-key: csd_admin
-    # 设置jwt过期时间
-    admin-ttl: 7200000
-    # 设置前端传递过来的令牌名称
-    admin-token-name: admin
-    user-secret-key: csd_user
-    user-ttl: 7200000
-    user-token-name: token
   alioss:
     endpoint: ${mingri.alioss.endpoint}
     access-key-id: ${mingri.alioss.access-key-id}
     access-key-secret: ${mingri.alioss.access-key-secret}
     bucket-name: ${mingri.alioss.bucket-name}
+
 captcha:
   email:
     from: ${mingri.mail.from}
@@ -74,3 +64,11 @@ captcha:
     user: ${mingri.mail.user}
     expire-time: ${mingri.mail.expireTime}
 
+security:
+  jwt:
+    # 设置jwt签名加密时使用的秘钥
+    secret-key: ${mingri.jwt.secret-key}
+    # 设置jwt过期时间
+    expire-time: ${mingri.jwt.expire-time}
+    # 设置前端传递过来的令牌名称
+    token-name: ${mingri.jwt.token-name}
