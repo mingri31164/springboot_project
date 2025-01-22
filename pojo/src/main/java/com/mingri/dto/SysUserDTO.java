@@ -5,13 +5,13 @@ import lombok.Data;
 import java.io.Serializable;
 
 @Data
-public class UserDTO implements Serializable {
+public class SysUserDTO implements Serializable {
 
     private Long id;
 
-    private String username;
+    private String nickName;
 
-    private String name;
+    private String userName;
 
     private String password;
 
@@ -19,8 +19,6 @@ public class UserDTO implements Serializable {
 
     private String email;
 
-    private String sex;
-
-    private String idNumber;
+    private Integer sex;
 
 }

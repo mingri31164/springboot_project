@@ -1,7 +1,5 @@
 package com.mingri.entity;
 import com.alibaba.fastjson.annotation.JSONField;
-import com.mingri.dto.UserLoginDTO;
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
@@ -22,13 +20,13 @@ import java.util.stream.Collectors;
 @Data
 @NoArgsConstructor
 public class LoginUser implements UserDetails{
-    private User user;
+    private SysUser sysUser;
 
     //查询用户权限信息
     private List<String> permissions;
 
-    public LoginUser(User user, List<String> permissions) {
-        this.user = user;
+    public LoginUser(SysUser sysUser, List<String> permissions) {
+        this.sysUser = sysUser;
         this.permissions = permissions;
     }
 
@@ -59,13 +57,13 @@ public class LoginUser implements UserDetails{
     @Override
     //用于获取用户密码。由于使用的实体类是User，所以获取的是数据库的用户密码
     public String getPassword() {
-        return user.getPassword();
+        return sysUser.getPassword();
     }
 
     @Override
     //用于获取用户名。由于使用的实体类是User，所以获取的是数据库的用户名
     public String getUsername() {
-        return user.getUsername();
+        return sysUser.getUserName();
     }
 
     @Override

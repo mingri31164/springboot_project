@@ -1,45 +1,52 @@
 package com.mingri.controller.user;
 
+
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.mingri.constant.JwtClaimsConstant;
-import com.mingri.context.BaseContext;
-import com.mingri.dto.UserDTO;
-import com.mingri.dto.UserLoginDTO;
-import com.mingri.dto.UserPageQueryDTO;
-import com.mingri.dto.UserRegisterDTO;
+import com.mingri.dto.SysUserDTO;
+import com.mingri.dto.SysUserLoginDTO;
+import com.mingri.dto.SysUserRegisterDTO;
 import com.mingri.entity.LoginUser;
-import com.mingri.entity.User;
+import com.mingri.entity.PageQuery;
+import com.mingri.entity.SysUser;
 import com.mingri.properties.JwtProperties;
-import com.mingri.result.PageResult;
 import com.mingri.result.Result;
-import com.mingri.service.UserService;
+import com.mingri.service.ISysUserService;
 import com.mingri.utils.JwtUtil;
-import com.mingri.vo.UserLoginVO;
+import com.mingri.vo.PageVO;
+import com.mingri.vo.SysInfoVO;
+import com.mingri.vo.SysUserLoginVO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Set;
 
 /**
- * 用户管理
+ * <p>
+ * 用户表 前端控制器
+ * </p>
+ *
+ * @author mingri31164
+ * @since 2025-01-22
  */
 @RestController
-@RequestMapping("/user")
 @Slf4j
 @Api(tags = "用户相关接口")
-public class UserController {
+@RequestMapping("/sys-user")
+public class SysUserController {
 
     @Autowired
-    private UserService userService;
+    private ISysUserService iSysUserService;
     @Autowired
     private JwtProperties jwtProperties;
+
 
     /**
      * 登录
@@ -48,28 +55,29 @@ public class UserController {
      */
     @ApiOperation("用户登录")
     @PostMapping("/login")
-    public Result<UserLoginVO> login(@RequestBody UserLoginDTO userLoginDTO) {
+    public Result<SysUserLoginVO> login(@RequestBody SysUserLoginDTO userLoginDTO) {
         log.info("用户登录：{}", userLoginDTO);
 
-        LoginUser loginUser = userService.login(userLoginDTO);
+        LoginUser loginUser = iSysUserService.login(userLoginDTO);
 
         //登录成功后，生成jwt令牌
         Map<String, Object> claims = new HashMap<>();
-        claims.put(JwtClaimsConstant.USER_ID, loginUser.getUser().getId());
+        claims.put(JwtClaimsConstant.USER_ID, loginUser.getSysUser().getId());
         String token = JwtUtil.createJWT(
                 jwtProperties.getUserSecretKey(),
                 jwtProperties.getUserTtl(),
                 claims);
 
-        UserLoginVO userLoginVO = UserLoginVO.builder()
-                .id(loginUser.getUser().getId())
+        SysUserLoginVO userLoginVO = SysUserLoginVO.builder()
+                .id(loginUser.getSysUser().getId())
                 .userName(loginUser.getUsername())
-                .name(loginUser.getUser().getName())
+                .name(loginUser.getSysUser().getNickName())
                 .token(token)
                 .build();
 
         return Result.success(userLoginVO);
     }
+
 
 
     /**
@@ -79,9 +87,9 @@ public class UserController {
      **/
     @PostMapping("/register")
     @ApiOperation("用户注册")
-    public Result register(@RequestBody UserRegisterDTO userRegisterDTO){
+    public Result register(@RequestBody SysUserRegisterDTO userRegisterDTO){
         log.info("新增用户：{}",userRegisterDTO);
-        userService.register(userRegisterDTO);
+        iSysUserService.register(userRegisterDTO);
         return Result.success();
     }
 
@@ -93,52 +101,27 @@ public class UserController {
     @ApiOperation("退出登录")
     @PostMapping("/logout")
     public Result<String> logout() {
-        userService.logout();
+        iSysUserService.logout();
         return Result.success();
     }
 
-
-    /**
-     * 新增用户
-     * @param userDTO
-     * @return
-     */
-    @PostMapping
-    @ApiOperation("新增用户")
-    public Result save(@RequestBody UserDTO userDTO){
-        log.info("新增用户：{}",userDTO);
-        userService.save(userDTO);
-        return Result.success();
-    }
 
     /**
      * 用户分页查询
-     * @param userPageQueryDTO
+     * @param query
      * @return
      */
-    @GetMapping("/page")
+    @PostMapping("/page")
     @ApiOperation("用户分页查询")
     @Cacheable(cacheNames = "userPageCache")
-    @PreAuthorize("hasAnyAuthority('admin')")
-    public Result<PageResult> page(UserPageQueryDTO userPageQueryDTO){
-        log.info("用户分页查询，参数为：{}", userPageQueryDTO);
-        PageResult pageResult = userService.pageQuery(userPageQueryDTO);
-        return Result.success(pageResult);
+// @PreAuthorize("hasAnyAuthority('admin')")
+    public PageVO<SysInfoVO> page(@RequestBody PageQuery query) {
+        // 1. 分页查询
+        Page<SysUser> result = iSysUserService.page(query.toMpPage("update_time", false));
+        // 2. 封装并返回
+        return PageVO.of(result, SysInfoVO.class);
     }
 
-    /**
-     * 启用禁用用户账号
-     * @param status
-     * @param id
-     * @return
-     */
-    @PostMapping("/status/{status}")
-    @ApiOperation("启用禁用用户账号")
-    public Result startOrStop(@PathVariable Integer status,Long id){
-        log.info("启用禁用用户账号：{},{}",status,id);
-        userService.startOrStop(status,id);
-        return Result.success();
-    }
 
     /**
      * 根据id查询用户信息
@@ -147,9 +130,9 @@ public class UserController {
      */
     @GetMapping("/{id}")
     @ApiOperation("根据id查询用户信息")
-    public Result<User> getById(@PathVariable Long id){
-        User employee = userService.getById(id);
-        return Result.success(employee);
+    public Result<SysUser> getById(@PathVariable Long id){
+        SysUser sysUser = iSysUserService.getById(id);
+        return Result.success(sysUser);
     }
 
     /**
@@ -159,9 +142,11 @@ public class UserController {
      */
     @PutMapping
     @ApiOperation("编辑用户信息")
-    public Result update(@RequestBody UserDTO userDTO){
+    public Result update(@RequestBody SysUserDTO userDTO){
         log.info("编辑用户信息：{}", userDTO);
-        userService.update(userDTO);
+        SysUser sysUser = new SysUser();
+        BeanUtils.copyProperties(userDTO, sysUser);
+        iSysUserService.updateById(sysUser);
         return Result.success();
     }
 

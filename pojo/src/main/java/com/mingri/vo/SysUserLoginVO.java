@@ -14,7 +14,7 @@ import java.io.Serializable;
 @NoArgsConstructor
 @AllArgsConstructor
 @ApiModel(description = "用户登录返回的数据格式")
-public class UserLoginVO implements Serializable {
+public class SysUserLoginVO implements Serializable {
 
     @ApiModelProperty("主键值")
     private Long id;
