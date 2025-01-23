@@ -1,9 +1,9 @@
 server:
-  port: 8093
+  port: 8080
 
 spring:
   application:
-    name: dynamic-thread-pool-test-app
+    name: springboot-scaffold
   profiles:
     active: dev
   main:
