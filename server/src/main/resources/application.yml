@@ -1,7 +1,9 @@
 server:
-  port: 8080
+  port: 8093
 
 spring:
+  application:
+    name: dynamic-thread-pool-test-app
   profiles:
     active: dev
   main:
@@ -72,3 +74,31 @@ security:
     expire-time: ${mingri.jwt.expire-time}
     # 设置前端传递过来的令牌名称
     token-name: ${mingri.jwt.token-name}
+
+
+# 线程池配置
+thread:
+  pool:
+    executor:
+      config:
+        core-pool-size: 20
+        max-pool-size: 50
+        keep-alive-time: 5000
+        block-queue-size: 5000
+        policy: CallerRunsPolicy
+
+
+## 动态线程池管理配置
+dynamic:
+  thread:
+    pool:
+      config:
+        # 状态；true = 开启、false 关闭
+        enabled: true
+        # redis host
+        host: 127.0.0.1
+        # redis port
+        port: 6379
+        password: 123456
+
+
