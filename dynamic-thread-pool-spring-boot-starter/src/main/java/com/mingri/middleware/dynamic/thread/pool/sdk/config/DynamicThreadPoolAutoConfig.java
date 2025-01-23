@@ -1,5 +1,6 @@
 package com.mingri.middleware.dynamic.thread.pool.sdk.config;
 
+import com.esotericsoftware.kryo.Kryo;
 import com.mingri.middleware.dynamic.thread.pool.sdk.domain.DynamicThreadPoolService;
 import com.mingri.middleware.dynamic.thread.pool.sdk.domain.IDynamicThreadPoolService;
 import com.mingri.middleware.dynamic.thread.pool.sdk.domain.model.entity.ThreadPoolConfigEntity;
@@ -8,10 +9,12 @@ import com.mingri.middleware.dynamic.thread.pool.sdk.registry.IRegistry;
 import com.mingri.middleware.dynamic.thread.pool.sdk.registry.redis.RedisRegistry;
 import com.mingri.middleware.dynamic.thread.pool.sdk.trigger.job.ThreadPoolDataReportJob;
 import com.mingri.middleware.dynamic.thread.pool.sdk.trigger.listener.ThreadPoolConfigAdjustListener;
-import io.micrometer.common.util.StringUtils;
+import lombok.extern.slf4j.Slf4j;
 import org.redisson.Redisson;
 import org.redisson.api.RTopic;
 import org.redisson.codec.JsonJacksonCodec;
+import org.redisson.codec.Kryo5Codec;
+import org.redisson.codec.TypedJsonJacksonCodec;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
@@ -25,6 +28,7 @@ import java.util.Set;
 import java.util.concurrent.ThreadPoolExecutor;
 import org.redisson.api.RedissonClient;
 import org.redisson.config.Config;
+import org.apache.commons.lang.StringUtils;
 
 
 
@@ -36,11 +40,13 @@ import org.redisson.config.Config;
 @Configuration
 @EnableConfigurationProperties(DynamicThreadPoolAutoProperties.class)
 @EnableScheduling
+@Slf4j
 public class DynamicThreadPoolAutoConfig {
 
     private final Logger logger = LoggerFactory.getLogger(DynamicThreadPoolAutoConfig.class);
 
     private String applicationName;
+
 
     @Bean("dynamicThreadRedissonClient")
     public RedissonClient redissonClient(DynamicThreadPoolAutoProperties properties) {

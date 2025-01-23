@@ -94,7 +94,7 @@ dynamic:
     pool:
       config:
         # 状态；true = 开启、false 关闭
-        enabled: true
+        enable: true
         # redis host
         host: 127.0.0.1
         # redis port

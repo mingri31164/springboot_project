@@ -1,13 +1,16 @@
 package com.mingri.middleware.dynamic.thread.pool.trigger;
 
 import com.alibaba.fastjson.JSON;
-import com.mingri.middleware.dynamic.thread.pool.entity.ThreadPoolConfigEntity;
+
+import com.mingri.middleware.dynamic.thread.pool.sdk.domain.model.entity.ThreadPoolConfigEntity;
 import com.mingri.middleware.dynamic.thread.pool.types.Response;
-import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.redisson.api.RList;
 import org.redisson.api.RTopic;
 import org.redisson.api.RedissonClient;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -21,12 +24,12 @@ import java.util.List;
 
 
 @Slf4j
-@RestController()
+@RestController
 @CrossOrigin("*")
 @RequestMapping("/api/v1/dynamic/thread/pool/")
 public class DynamicThreadPoolController {
 
-    @Resource
+    @Autowired
     public RedissonClient redissonClient;
 
     /**

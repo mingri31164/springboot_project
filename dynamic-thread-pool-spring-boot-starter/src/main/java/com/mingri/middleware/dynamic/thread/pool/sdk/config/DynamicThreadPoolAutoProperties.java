@@ -13,13 +13,13 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 public class DynamicThreadPoolAutoProperties {
 
     /** 状态；open = 开启、close 关闭 */
-    private boolean enable = true;
+    private boolean enable;
     /** redis host */
-    private String host = "127.0.0.1";
+    private String host;
     /** redis port */
-    private int port = 6379;
+    private int port;
     /** 账密 */
-    private String password = "123456";
+    private String password;
     /** 设置连接池的大小，默认为64 */
     private int poolSize = 64;
     /** 设置连接池的最小空闲连接数，默认为10 */
