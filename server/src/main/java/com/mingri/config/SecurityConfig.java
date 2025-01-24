@@ -71,7 +71,7 @@ public class SecurityConfig  {
 				.accessDeniedHandler(accessDeniedHandler);
 
 		//配置跨域
-		http.cors();
+//		http.cors();
 
 		return http.build();
 

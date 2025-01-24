@@ -95,9 +95,9 @@ dynamic:
       config:
 #        enable: true
         # redis host
-        host: 127.0.0.1
+        host: ${redis.sdk.config.host}
         # redis port
-        port: 6379
-        password: 123456
+        port: ${redis.sdk.config.port}
+        password: ${redis.sdk.config.password}
 
 
