@@ -26,4 +26,5 @@ public class MessageConstant {
     public static final String AUTHENTICATION_FAILED = "用户认证失败，请重新登录";
     public static final String PERMISSION_NOT_EXIST = "没有权限";
 
+    public static final String EMAIL_EXIST = "邮箱已被注册";
 }

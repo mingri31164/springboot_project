@@ -94,9 +94,9 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
     public void register(SysUserRegisterDTO sysUserRegisterDTO) {
 
         //TODO 邮箱重复处理
-//        if (userMapper.existsByEmail(userRegisterDTO.getEmail())) {
-//            throw new RegisterFailedException(MessageConstant.ACCOUNT_EXIST);
-//        }
+        if (lambdaQuery().eq(SysUser::getEmail, sysUserRegisterDTO.getEmail()).exists()) {
+            throw new RegisterFailedException(MessageConstant.EMAIL_EXIST);
+        }
         // 根据邮箱生成Redis键名
         String redisKey = MailConstant.CAPTCHA_CODE_KEY_PRE + sysUserRegisterDTO.getEmail();
         // 尝试从Redis获取现有的验证码

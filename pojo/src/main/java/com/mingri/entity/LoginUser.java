@@ -17,6 +17,12 @@ import java.util.stream.Collectors;
  * @Version: 1.0
  */
 
+
+/**
+ * @Description: 用于security读取权限信息
+ * @Author: mingri31164
+ * @Date: 2025/1/24 15:57
+ **/
 @Data
 @NoArgsConstructor
 public class LoginUser implements UserDetails{
