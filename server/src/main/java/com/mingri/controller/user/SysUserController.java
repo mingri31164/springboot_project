@@ -3,9 +3,10 @@ package com.mingri.controller.user;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.mingri.constant.JwtClaimsConstant;
-import com.mingri.dto.SysUserDTO;
-import com.mingri.dto.SysUserLoginDTO;
-import com.mingri.dto.SysUserRegisterDTO;
+import com.mingri.context.BaseContext;
+import com.mingri.dto.user.SysUserDTO;
+import com.mingri.dto.user.SysUserLoginDTO;
+import com.mingri.dto.user.SysUserRegisterDTO;
 import com.mingri.entity.LoginUser;
 import com.mingri.entity.PageQuery;
 import com.mingri.entity.SysUser;
@@ -147,6 +148,7 @@ public class SysUserController {
         log.info("编辑用户信息：{}", userDTO);
         SysUser sysUser = new SysUser();
         BeanUtils.copyProperties(userDTO, sysUser);
+        sysUser.setId(BaseContext.getCurrentId());
         iSysUserService.updateById(sysUser);
         return Result.success();
     }

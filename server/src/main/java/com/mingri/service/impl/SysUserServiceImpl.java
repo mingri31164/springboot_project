@@ -1,10 +1,11 @@
 package com.mingri.service.impl;
 
+import cn.hutool.core.util.IdUtil;
 import com.mingri.constant.MailConstant;
 import com.mingri.constant.MessageConstant;
 import com.mingri.constant.RedisConstant;
-import com.mingri.dto.SysUserLoginDTO;
-import com.mingri.dto.SysUserRegisterDTO;
+import com.mingri.dto.user.SysUserLoginDTO;
+import com.mingri.dto.user.SysUserRegisterDTO;
 import com.mingri.entity.LoginUser;
 import com.mingri.entity.SysUser;
 import com.mingri.enumeration.UserStatus;
@@ -29,8 +30,6 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
@@ -93,7 +92,7 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
 
     public void register(SysUserRegisterDTO sysUserRegisterDTO) {
 
-        //TODO 邮箱重复处理
+        // 邮箱重复处理
         if (lambdaQuery().eq(SysUser::getEmail, sysUserRegisterDTO.getEmail()).exists()) {
             throw new RegisterFailedException(MessageConstant.EMAIL_EXIST);
         }
@@ -128,7 +127,6 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
         sysUser.setPassword(passwordEncoder.encode(sysUser.getPassword()));
         //设置账号的状态，默认正常状态 0表示正常 1表示锁定
         sysUser.setStatus(UserStatus.NORMAL);
-
         save(sysUser);
     }
 

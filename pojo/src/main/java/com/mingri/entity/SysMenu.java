@@ -64,7 +64,7 @@ public class SysMenu implements Serializable {
     private Long updateBy;
 
     @ApiModelProperty(value = "更新时间")
-    @TableField(value = "update_time",fill = FieldFill.UPDATE)
+    @TableField(value = "update_time",fill = FieldFill.INSERT_UPDATE)
     private LocalDateTime updateTime;
 
     @ApiModelProperty(value = "是否删除（0未删除 1已删除）")

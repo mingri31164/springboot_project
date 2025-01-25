@@ -73,7 +73,7 @@ public class SysUser implements Serializable {
     private Long updateBy;
 
     @ApiModelProperty(value = "更新时间")
-    @TableField(value = "update_time",fill = FieldFill.UPDATE)
+    @TableField(value = "update_time",fill = FieldFill.INSERT_UPDATE)
     private LocalDateTime updateTime;
 
     @ApiModelProperty(value = "删除标志（0代表未删除，1代表已删除）")
