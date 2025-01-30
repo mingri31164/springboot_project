@@ -10,6 +10,10 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.web.bind.annotation.CrossOrigin;
 
+import java.util.Random;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.TimeUnit;
+
 
 @Slf4j
 @SpringBootApplication
@@ -25,8 +29,7 @@ public class ApplicationRun {
 
 
 
-    // 创建一个线程池，用于模拟线程任务执行（测试动态线程池组件）
-//    @Bean
+//    // 创建一个线程池，用于模拟线程任务执行（测试动态线程池组件）
 //    @Bean
 //    public ApplicationRunner applicationRunner(ExecutorService threadPoolExecutor01) {
 //        return args -> {
