@@ -1,5 +1,6 @@
 package com.mingri.controller.hello;
 
+import com.mingri.annotation.UrlFree;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -11,6 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class HelloController {
 
+    @UrlFree
     @RequestMapping("/hello")
     @PreAuthorize("hasAuthority('system:dept:list')") //单个权限
 //    @PreAuthorize("hasAnyAuthority('user','admin')") //多个权限（只要有其中之一）

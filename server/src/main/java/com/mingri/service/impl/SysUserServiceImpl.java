@@ -16,6 +16,7 @@ import com.mingri.mapper.SysMenuMapper;
 import com.mingri.mapper.SysUserMapper;
 import com.mingri.service.ISysUserService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.mingri.utils.CacheUtil;
 import com.mingri.utils.RedisUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -52,43 +53,8 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
     private PasswordEncoder passwordEncoder;
     @Autowired
     private SysMenuMapper sysMenuMapper;
-
-    /**
-     * 用户登录（md5）
-     *
-     * @return
-     */
-//    public User login(UserLoginDTO userLoginDTO) {
-//        String username = userLoginDTO.getUsername();
-//        String password = userLoginDTO.getPassword();
-//
-//        //1、根据用户名查询数据库中的数据
-//        User user = userMapper.getByUsername(username);
-//
-//        //2、处理各种异常情况（用户名不存在、密码不对、账号被锁定）
-//        if (user == null) {
-//            //账号不存在
-//            throw new AccountNotFoundException(MessageConstant.ACCOUNT_NOT_FOUND);
-//        }
-//
-//        //TODO 后续将账号不存在和密码错误归为一种异常
-//        //密码比对
-//        //对前端传过来的明文密码进行md5加密处理
-//        password = DigestUtils.md5DigestAsHex(password.getBytes());
-//        if (!password.equals(user.getPassword())) {
-//            //密码错误
-//            throw new PasswordErrorException(MessageConstant.PASSWORD_ERROR);
-//        }
-//
-//        if (user.getStatus() == StatusConstant.DISABLE) {
-//            //账号被锁定
-//            throw new AccountLockedException(MessageConstant.ACCOUNT_LOCKED);
-//        }
-//
-//        //3、返回实体对象
-//        return user;
-//    }
-
+    @Autowired
+    private CacheUtil cacheUtil;
 
     public void register(SysUserRegisterDTO sysUserRegisterDTO) {
 
@@ -118,11 +84,6 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
         SysUser sysUser = new SysUser();
         //对象属性拷贝
         BeanUtils.copyProperties(sysUserRegisterDTO, sysUser);
-        //密码加密
-        //MD5加密
-//        user.setPassword(DigestUtils.md5DigestAsHex
-//                (user.getPassword().getBytes()));
-
         //passwordEncoder加密
         sysUser.setPassword(passwordEncoder.encode(sysUser.getPassword()));
         //设置账号的状态，默认正常状态 0表示正常 1表示锁定
@@ -209,5 +170,6 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
         //根据用户id，删除redis中的token值，注意我们的key是被 login: 拼接过的，所以下面写完整key的时候要带上 longin:
         String key = RedisConstant.USER_INFO_PREFIX + userid.toString();
         redisUtils.del(key);
+        cacheUtil.clearUserSessionCache(String.valueOf(userid));
     }
 }

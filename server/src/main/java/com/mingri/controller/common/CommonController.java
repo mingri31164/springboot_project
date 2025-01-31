@@ -1,5 +1,6 @@
 package com.mingri.controller.common;
 
+import com.mingri.annotation.UrlFree;
 import com.mingri.constant.MessageConstant;
 import com.mingri.result.Result;
 import com.mingri.service.CommonService;
@@ -39,6 +40,8 @@ public class CommonController {
      * @param file
      * @return
      */
+
+    @UrlFree
     @PostMapping("/upload")
     @ApiOperation("文件上传")
     public Result<String> upload(MultipartFile file){
@@ -69,11 +72,12 @@ public class CommonController {
      * @Author: mingri31164
      * @Date: 2025/1/20 0:01
      **/
-        @ApiOperation("发送邮箱验证码")
-        @GetMapping("/email-captcha")
-        public Result<String> sendEmailCaptcha(String email) {
-            commonService.sendEmailCaptcha(email);
-            return Result.success("发送成功");
-        }
+    @UrlFree
+    @ApiOperation("发送邮箱验证码")
+    @GetMapping("/email-captcha")
+    public Result<String> sendEmailCaptcha(String email) {
+        commonService.sendEmailCaptcha(email);
+        return Result.success("发送成功");
+    }
 
 }

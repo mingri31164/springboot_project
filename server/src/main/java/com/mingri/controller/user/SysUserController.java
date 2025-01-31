@@ -2,7 +2,11 @@ package com.mingri.controller.user;
 
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.mingri.annotation.UrlFree;
+import com.mingri.annotation.UrlLimit;
 import com.mingri.constant.JwtClaimsConstant;
+import com.mingri.constant.LimitKeyType;
+import com.mingri.constant.RedisConstant;
 import com.mingri.context.BaseContext;
 import com.mingri.dto.user.SysUserDTO;
 import com.mingri.dto.user.SysUserLoginDTO;
@@ -13,6 +17,7 @@ import com.mingri.entity.SysUser;
 import com.mingri.properties.JwtProperties;
 import com.mingri.result.Result;
 import com.mingri.service.ISysUserService;
+import com.mingri.utils.CacheUtil;
 import com.mingri.utils.JwtUtil;
 import com.mingri.result.PageResult;
 import com.mingri.vo.SysUserLoginVO;
@@ -46,6 +51,8 @@ public class SysUserController {
     private ISysUserService iSysUserService;
     @Autowired
     private JwtProperties jwtProperties;
+    @Autowired
+    private CacheUtil cacheUtil;
 
 
     /**
@@ -54,6 +61,8 @@ public class SysUserController {
      * @return
      */
     @ApiOperation("用户登录")
+    @UrlFree
+//    @UrlLimit(keyType = LimitKeyType.ID)
     @PostMapping("/login")
     public Result<SysUserLoginVO> login(@RequestBody @Valid SysUserLoginDTO userLoginDTO) {
         log.info("用户登录：{}", userLoginDTO);
@@ -77,6 +86,9 @@ public class SysUserController {
                 .token(token)
                 .build();
 
+        String key = RedisConstant.USER_INFO_PREFIX + userLoginVO.getId().toString();
+        cacheUtil.putUserSessionCache(key, token);
+
         return Result.success(userLoginVO);
     }
 
@@ -87,8 +99,11 @@ public class SysUserController {
      * @Author: mingri31164
      * @Date: 2025/1/20 18:13
      **/
-    @PostMapping("/register")
+
     @ApiOperation("用户注册")
+    @UrlFree
+    @UrlLimit(keyType = LimitKeyType.ID)
+    @PostMapping("/register")
     public Result register(@RequestBody @Valid SysUserRegisterDTO userRegisterDTO){
         log.info("新增用户：{}",userRegisterDTO);
         iSysUserService.register(userRegisterDTO);
@@ -100,6 +115,7 @@ public class SysUserController {
      * 退出
      * @return
      */
+    @UrlLimit
     @ApiOperation("退出登录")
     @PostMapping("/logout")
     public Result<String> logout() {
@@ -113,6 +129,7 @@ public class SysUserController {
      * @param query
      * @return
      */
+    @UrlLimit
     @PostMapping("/page")
     @ApiOperation("用户分页查询")
 //    @Cacheable(cacheNames = "userPageCache")
@@ -130,6 +147,8 @@ public class SysUserController {
      * @param id
      * @return
      */
+
+    @UrlLimit
     @GetMapping("/{id}")
     @ApiOperation("根据id查询用户信息")
     public Result<SysUser> getById(@PathVariable Long id){
@@ -142,6 +161,8 @@ public class SysUserController {
      * @param userDTO
      * @return
      */
+
+    @UrlLimit
     @PutMapping
     @ApiOperation("编辑用户信息")
     public Result update(@RequestBody SysUserDTO userDTO){
