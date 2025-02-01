@@ -124,7 +124,7 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
      * @Date: 2025/1/21 18:33
      **/
 
-    public LoginUser login(SysUserLoginDTO userLoginDTO) {
+    public SysUser login(SysUserLoginDTO userLoginDTO) {
         // 用户在登录页面输入的用户名和密码
         UsernamePasswordAuthenticationToken authenticationToken =
                 new UsernamePasswordAuthenticationToken(userLoginDTO.getUserName(), userLoginDTO.getPassword());
@@ -135,16 +135,16 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
 
             // 认证成功后，提取 LoginUser
             LoginUser loginUser = (LoginUser) authenticate.getPrincipal();
-
+            SysUser sysUser = loginUser.getSysUser();
             // 检查用户状态
-            if (loginUser.getSysUser().getStatus().equals(UserStatus.FREEZE)) {
+            if (sysUser.getStatus().equals(UserStatus.FREEZE)) {
                 throw new LoginFailedException(MessageConstant.ACCOUNT_LOCKED);
             }
 
             // 把完整的用户信息存入 Redis，其中 userid 作为 key
             redisUtils.set(RedisConstant.USER_INFO_PREFIX +
-                    loginUser.getSysUser().getId().toString(), loginUser);
-            return loginUser;
+                    sysUser.getId().toString(), loginUser);
+            return sysUser;
 
         } catch (AuthenticationException e) {
             // 认证失败处理

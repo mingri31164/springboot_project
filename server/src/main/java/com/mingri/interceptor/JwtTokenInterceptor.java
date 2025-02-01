@@ -1,20 +1,6 @@
 package com.mingri.interceptor;
 
 
-import com.mingri.constant.JwtClaimsConstant;
-import com.mingri.context.BaseContext;
-import com.mingri.properties.JwtProperties;
-import com.mingri.utils.JwtUtil;
-import io.jsonwebtoken.Claims;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-import org.springframework.web.servlet.HandlerInterceptor;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import org.springframework.web.method.HandlerMethod;
-
-
 /**
  * jwt令牌校验的拦截器
  */

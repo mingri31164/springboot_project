@@ -21,7 +21,7 @@ public interface ISysUserService extends IService<SysUser> {
      * @param userLoginDTO
      * @return
      */
-    LoginUser login(SysUserLoginDTO userLoginDTO);
+    SysUser login(SysUserLoginDTO userLoginDTO);
 
 
 

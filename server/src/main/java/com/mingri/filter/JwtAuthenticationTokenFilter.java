@@ -2,6 +2,7 @@ package com.mingri.filter;
 
 
 import cn.hutool.core.util.StrUtil;
+import com.alibaba.fastjson.JSON;
 import com.mingri.constant.JwtClaimsConstant;
 import com.mingri.constant.MessageConstant;
 import com.mingri.constant.RedisConstant;
@@ -9,13 +10,12 @@ import com.mingri.context.BaseContext;
 import com.mingri.entity.LoginUser;
 import com.mingri.exception.LoginFailedException;
 import com.mingri.properties.JwtProperties;
-import com.mingri.utils.CacheUtil;
-import com.mingri.utils.JwtUtil;
-import com.mingri.utils.RedisUtils;
-import com.mingri.utils.UrlPermitUtil;
+import com.mingri.result.Result;
+import com.mingri.utils.*;
 import io.jsonwebtoken.Claims;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
@@ -56,30 +56,38 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request,
                                     HttpServletResponse response,
                                     FilterChain filterChain) throws ServletException, IOException {
+        // 获取 token
         String token = request.getHeader(jwtProperties.getTokenName());
         String url = request.getRequestURI();
-
-        if (!StringUtils.hasText(token)) {
+        // 判空
+        if (!StringUtils.hasText(token) || "OPTIONS".equalsIgnoreCase(request.getMethod())) {
             // 如果没有令牌，直接放行
             filterChain.doFilter(request, response);
             return;
         }
 
+        // 校验令牌
+        Long userId;
         if (!urlPermitUtil.isPermitUrl(url)){
             try {
                 Claims claims = JwtUtil.parseJWT(jwtProperties.getSecretKey(), token);
-                String userId = (String) claims.get(JwtClaimsConstant.USER_ID);
+                userId = Long.valueOf(claims.get(JwtClaimsConstant.USER_ID).toString());
                 log.info("当前用户的id：{}", userId);
-                //判断是否在其他地方登录
-                String cacheToken = cacheUtil.getUserSessionCache(userId);
-                if (StrUtil.isBlank(cacheToken)) {
+                // 验证是否在其他地方登录
+                String cacheToken = cacheUtil.getUserSessionCache(userId.toString());
+                if (StrUtil.isBlank(cacheToken)){
                     throw new LoginFailedException(MessageConstant.AUTHENTICATION_FAILED);
-                } else if (!cacheToken.equals(token)) {
-                    throw new LoginFailedException(MessageConstant.LOGIN_IN_OTHER_PLACE);
+                }
+                else if (!cacheToken.equals(token)){
+                    Result<Object> error = Result.error
+                            (HttpStatus.FORBIDDEN.value(), MessageConstant.LOGIN_IN_OTHER_PLACE);
+                    String json = JSON.toJSONString(error);
+                    WebUtils.renderString(response,json);
+                    return;
                 }
                 setUserInfo(claims, url, request, response);
             } catch (Exception e) {
-                throw new LoginFailedException(MessageConstant.AUTHENTICATION_FAILED);
+                throw new LoginFailedException(MessageConstant.TOKEN_ERROR);
             }
         } else {
             if (StrUtil.isNotBlank(token)) {
@@ -90,16 +98,13 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
                 }
             }
         }
-
         filterChain.doFilter(request, response);
     }
+
 
     public void setUserInfo(Claims claims, String url,
                             HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) {
 
-        String userId = (String) claims.get(JwtClaimsConstant.USER_ID);
-
-        //TODO 待解决bug：存入map失败
         // 设置用户信息
         Map<String, Object> map = new HashMap<>();
         claims.entrySet().stream().forEach(e -> map.put(e.getKey(), e.getValue()));
@@ -110,6 +115,7 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
         }
         httpServletRequest.setAttribute("userinfo", map);
 
+        String userId = String.valueOf(Long.valueOf(claims.get(JwtClaimsConstant.USER_ID).toString()));
         // 从 Redis 中获取用户信息
         String redisKey = RedisConstant.USER_INFO_PREFIX + userId;
         LoginUser loginUser = (LoginUser) redisUtils.get(redisKey);

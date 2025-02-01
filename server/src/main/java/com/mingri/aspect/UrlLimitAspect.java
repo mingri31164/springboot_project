@@ -54,6 +54,7 @@ public class UrlLimitAspect {
         // 获取key的类型
         if (urlLimit.keyType() == LimitKeyType.ID) {
             Map<String, Object> userinfo = (Map<String, Object>) request.getAttribute("userinfo");
+            log.info("获取用户信息：{}", userinfo);
             key = userinfo.get(JwtClaimsConstant.USER_ID).toString();
         } else {
             key = IpUtil.getIpAddr(request);

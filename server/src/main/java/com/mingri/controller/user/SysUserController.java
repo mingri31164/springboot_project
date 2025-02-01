@@ -61,33 +61,31 @@ public class SysUserController {
      * @return
      */
     @ApiOperation("用户登录")
-    @UrlFree
 //    @UrlLimit(keyType = LimitKeyType.ID)
     @PostMapping("/login")
     public Result<SysUserLoginVO> login(@RequestBody @Valid SysUserLoginDTO userLoginDTO) {
         log.info("用户登录：{}", userLoginDTO);
 
-        LoginUser loginUser = iSysUserService.login(userLoginDTO);
+        SysUser loginUser = iSysUserService.login(userLoginDTO);
 
         //登录成功后，生成jwt令牌
         Map<String, Object> claims = new HashMap<>();
-        claims.put(JwtClaimsConstant.USER_ID, loginUser.getSysUser().getId());
+        claims.put(JwtClaimsConstant.USER_ID, loginUser.getId());
         String token = JwtUtil.createJWT(
                 jwtProperties.getSecretKey(),
                 jwtProperties.getExpireTime(),
                 claims);
 
+        cacheUtil.putUserSessionCache(String.valueOf(loginUser.getId()), token);
         SysUserLoginVO userLoginVO = SysUserLoginVO.builder()
-                .id(loginUser.getSysUser().getId())
-                .userName(loginUser.getUsername())
-                .userType(loginUser.getSysUser().getUserType())
-                .email(loginUser.getSysUser().getEmail())
-                .avatar(loginUser.getSysUser().getAvatar())
+                .id(loginUser.getId())
+                .userName(loginUser.getUserName())
+                .userType(loginUser.getUserType())
+                .email(loginUser.getEmail())
+                .avatar(loginUser.getAvatar())
                 .token(token)
                 .build();
 
-        String key = RedisConstant.USER_INFO_PREFIX + userLoginVO.getId().toString();
-        cacheUtil.putUserSessionCache(key, token);
 
         return Result.success(userLoginVO);
     }
