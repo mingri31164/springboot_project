@@ -1,7 +1,6 @@
 package com.mingri.utils;
 
 import cn.hutool.core.bean.BeanUtil;
-
 import java.util.List;
 import java.util.stream.Collectors;
 

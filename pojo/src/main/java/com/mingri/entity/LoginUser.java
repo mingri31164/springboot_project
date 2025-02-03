@@ -1,22 +1,14 @@
 package com.mingri.entity;
+
 import com.alibaba.fastjson.annotation.JSONField;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-
 import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
-
-/**
- * @Author: mingri31164
- * @CreateTime: 2025/1/21 17:30
- * @ClassName: LoginUser
- * @Version: 1.0
- */
-
 
 /**
  * @Description: 用于security读取权限信息

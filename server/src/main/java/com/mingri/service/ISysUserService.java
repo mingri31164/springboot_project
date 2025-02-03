@@ -2,7 +2,6 @@ package com.mingri.service;
 
 import com.mingri.dto.user.SysUserLoginDTO;
 import com.mingri.dto.user.SysUserRegisterDTO;
-import com.mingri.entity.LoginUser;
 import com.mingri.entity.SysUser;
 import com.baomidou.mybatisplus.extension.service.IService;
 

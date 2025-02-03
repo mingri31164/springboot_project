@@ -7,7 +7,6 @@ import com.mingri.middleware.dynamic.thread.pool.sdk.registry.IRegistry;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.scheduling.annotation.Scheduled;
-
 import java.util.List;
 
 /**

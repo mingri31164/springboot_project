@@ -1,6 +1,5 @@
 package com.mingri.service.impl;
 
-import cn.hutool.core.util.IdUtil;
 import com.mingri.constant.MailConstant;
 import com.mingri.constant.MessageConstant;
 import com.mingri.constant.RedisConstant;

@@ -1,10 +1,8 @@
 package com.mingri.entity;
 
 import com.baomidou.mybatisplus.annotation.*;
-
 import java.time.LocalDateTime;
 import java.io.Serializable;
-
 import com.mingri.enumeration.UserStatus;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;

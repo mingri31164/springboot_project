@@ -3,7 +3,6 @@ package com.mingri.enumeration;
 
 import com.baomidou.mybatisplus.annotation.EnumValue;
 import com.fasterxml.jackson.annotation.JsonValue;
-import lombok.Getter;
 
 /**
  * @Description: 用户禁用状态枚举

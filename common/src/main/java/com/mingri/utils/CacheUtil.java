@@ -3,7 +3,6 @@ package com.mingri.utils;
 import com.github.benmanes.caffeine.cache.Cache;
 import com.github.benmanes.caffeine.cache.Caffeine;
 import org.springframework.stereotype.Component;
-
 import java.util.concurrent.TimeUnit;
 
 
@@ -33,7 +32,7 @@ public class CacheUtil {
     }
 
     public String getUserSessionCache(String username) {
-        return userSessionCache.getIfPresent(username); //返回null表示缓存中没有该值
+        return userSessionCache.getIfPresent(username);
     }
 
     public void putUserReadCache(String userId, String targetId) {

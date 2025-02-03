@@ -2,7 +2,6 @@ package com.mingri.middleware.dynamic.thread.pool.sdk.domain;
 
 
 import com.mingri.middleware.dynamic.thread.pool.sdk.domain.model.entity.ThreadPoolConfigEntity;
-
 import java.util.List;
 
 /**

@@ -1,7 +1,6 @@
 package com.mingri.middleware.dynamic.thread.pool.types;
 
 import lombok.*;
-
 import java.io.Serializable;
 
 /**

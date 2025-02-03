@@ -1,7 +1,6 @@
 package com.mingri.entity;
 
 import com.baomidou.mybatisplus.annotation.*;
-
 import java.time.LocalDateTime;
 import java.io.Serializable;
 import io.swagger.annotations.ApiModel;
