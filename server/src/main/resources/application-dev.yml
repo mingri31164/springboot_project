@@ -17,11 +17,11 @@ mingri:
     access-key-secret:
     bucket-name:
   mail:
-    from: xxx@qq.com
-    password:
+    from: 3116430062@qq.com
+    password: ulyezclhetqhdhab
     host: smtp.qq.com
     port: 465
-    user: xxx@qq.com
+    user: 3116430062@qq.com
     expireTime: 180 #3分钟
   jwt:
     secret-key: csd_admin
