@@ -2,6 +2,8 @@ server:
   port: 8080
 
 spring:
+  application:
+    name: springboot-scaffold
   profiles:
     active: dev
   main:
@@ -9,7 +11,7 @@ spring:
   datasource:
     druid:
       driver-class-name: ${mingri.datasource.driver-class-name}
-      url: jdbc:mysql://${mingri.datasource.host}:${mingri.datasource.port}/${mingri.datasource.database}?serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=utf-8&zeroDateTimeBehavior=convertToNull&useSSL=false&allowPublicKeyRetrieval=true
+      url: jdbc:mysql://${mingri.datasource.host}:${mingri.datasource.port}/${mingri.datasource.database}?serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=utf-8&zeroDateTimeBehavior=convertToNull&useSSL=false&allowPublicKeyRetrieval=true&rewriteBatchedStatements=true
       username: ${mingri.datasource.username}
       password: ${mingri.datasource.password}
 
@@ -20,13 +22,25 @@ spring:
     database: ${mingri.redis.database}
 
 
-mybatis:
-  #mapper配置文件
-  mapper-locations: classpath:mapper/*.xml
+#mybatis:
+#  #mapper配置文件
+#  mapper-locations: classpath:mapper/*.xml
+#  type-aliases-package: com.mingri.entity
+#  configuration:
+#    #开启驼峰命名
+#    map-underscore-to-camel-case: true
+mybatis-plus:
   type-aliases-package: com.mingri.entity
+  mapper-locations: classpath*:/mapper/**/*.xml
+  global-config:
+    db-config:
+      id-type: auto
+      logic-delete-field: del_flag # 逻辑删除字段名
+      logic-delete-value: 1 # 逻辑已删除值（默认为1）
+      logic-not-delete-value: 0 # 逻辑未删除值（默认为0）
   configuration:
-    #开启驼峰命名
-    map-underscore-to-camel-case: true
+    # 全局枚举处理器
+    default-enum-type-handler: com.baomidou.mybatisplus.core.handlers.MybatisEnumTypeHandler
 
 logging:
   level:
@@ -37,21 +51,12 @@ logging:
         controller: info
 
 mingri:
-  jwt:
-    # 设置jwt签名加密时使用的秘钥
-    admin-secret-key: csd_admin
-    # 设置jwt过期时间
-    admin-ttl: 7200000
-    # 设置前端传递过来的令牌名称
-    admin-token-name: admin
-    user-secret-key: csd_user
-    user-ttl: 7200000
-    user-token-name: token
   alioss:
     endpoint: ${mingri.alioss.endpoint}
     access-key-id: ${mingri.alioss.access-key-id}
     access-key-secret: ${mingri.alioss.access-key-secret}
     bucket-name: ${mingri.alioss.bucket-name}
+
 captcha:
   email:
     from: ${mingri.mail.from}
@@ -60,5 +65,39 @@ captcha:
     port: ${mingri.mail.port}
     user: ${mingri.mail.user}
     expire-time: ${mingri.mail.expireTime}
+
+security:
+  jwt:
+    # 设置jwt签名加密时使用的秘钥
+    secret-key: ${mingri.jwt.secret-key}
+    # 设置jwt过期时间
+    expire-time: ${mingri.jwt.expire-time}
+    # 设置前端传递过来的令牌名称
+    token-name: ${mingri.jwt.token-name}
+
+
+# 线程池配置
+thread:
+  pool:
+    executor:
+      config:
+        core-pool-size: 20
+        max-pool-size: 50
+        keep-alive-time: 5000
+        block-queue-size: 5000
+        policy: CallerRunsPolicy
+
+
+## 动态线程池管理配置
+dynamic:
+  thread:
+    pool:
+      config:
+#        enable: true
+        # redis host
+        host: ${redis.sdk.config.host}
+        # redis port
+        port: ${redis.sdk.config.port}
+        password: ${redis.sdk.config.password}
 
 

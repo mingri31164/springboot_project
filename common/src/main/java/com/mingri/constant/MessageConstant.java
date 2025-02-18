@@ -23,5 +23,11 @@ public class MessageConstant {
     public static final String EMAIL_VERIFICATION_CODE_ERROR = "验证码校验错误";
     public static final String PLEASE_GET_VERIFICATION_CODE_FIRST = "请先获取验证码";
     public static final String TOKEN_ERROR = "token校验失败";
+    public static final String AUTHENTICATION_FAILED = "用户认证失败，请重新登录";
+    public static final String LOGIN_IN_OTHER_PLACE = "已在其他地方登录";
+    public static final String PERMISSION_NOT_EXIST = "没有权限";
+    public static final String EMAIL_EXIST = "邮箱已被注册";
+    public static final String ACCESS_FREQUENCY_LIMIT_EXCEEDED = "访问过于频繁，您已被封禁~";
+    public static final String ACCESS_SPEED_LIMIT_EXCEEDED = "访问过快，请稍后再试~";
 
 }

@@ -1,7 +1,9 @@
 package com.mingri.config;
 
 
-import com.mingri.interceptor.JwtAuthenticationTokenFilter;
+import com.mingri.filter.JwtAuthenticationTokenFilter;
+import com.mingri.handler.AccessDeniedHandlerImpl;
+import com.mingri.handler.AuthenticationEntryPointImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -22,8 +24,11 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 public class SecurityConfig  {
 
 	@Autowired
-	//注入我们在filter目录写好的类
 	private JwtAuthenticationTokenFilter jwtAuthenticationTokenFilter;
+	@Autowired
+	private AuthenticationEntryPointImpl authenticationEntryPoint;
+	@Autowired
+	private AccessDeniedHandlerImpl accessDeniedHandler;
 
 	@Bean
 	public PasswordEncoder passwordEncoder() {
@@ -45,7 +50,7 @@ public class SecurityConfig  {
 				sessionCreationPolicy(SessionCreationPolicy.STATELESS) // 使用无状态会话
 				.and()
 				.authorizeRequests()
-				.antMatchers("/user/login","/user/register",
+				.antMatchers("/sys-user/login","/sys-user/register",
 						"/common/*",
 						"/v2/api-docs",
 						"/swagger-resources/configuration/ui",
@@ -53,11 +58,21 @@ public class SecurityConfig  {
 						"/swagger-resources/configuration/security",
 						"/doc.html",
 						"/swagger-ui.html",
-						"/webjars/**").anonymous() // 接口允许匿名访问（已登录不可访问，未登录可以）
+						"/webjars/**").anonymous()// 接口允许匿名访问（已登录不可访问，未登录可以）
+//				.antMatchers("/sys-user").hasAuthority("system:dept:list") //配置指定路径接口需要权限访问
 				.anyRequest().authenticated(); // 其他请求需要认证
+
 		//把token校验过滤器添加到过滤器链中
-		//第一个参数是上面注入的我们在filter目录写好的类，第二个参数表示你想添加到哪个过滤器之前
 		http.addFilterBefore(jwtAuthenticationTokenFilter, UsernamePasswordAuthenticationFilter.class);
+
+		//配置认证失败处理器
+		http.exceptionHandling()
+				.authenticationEntryPoint(authenticationEntryPoint)
+				.accessDeniedHandler(accessDeniedHandler);
+
+		//配置跨域
+//		http.cors();
+
 		return http.build();
 
 	}

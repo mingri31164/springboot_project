@@ -1,34 +1,30 @@
 package com.mingri.entity;
+
 import com.alibaba.fastjson.annotation.JSONField;
-import com.mingri.dto.UserLoginDTO;
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-
 import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
 /**
+ * @Description: 用于security读取权限信息
  * @Author: mingri31164
- * @CreateTime: 2025/1/21 17:30
- * @ClassName: LoginUser
- * @Version: 1.0
- */
-
+ * @Date: 2025/1/24 15:57
+ **/
 @Data
 @NoArgsConstructor
 public class LoginUser implements UserDetails{
-    private User user;
+    private SysUser sysUser;
 
     //查询用户权限信息
     private List<String> permissions;
 
-    public LoginUser(User user, List<String> permissions) {
-        this.user = user;
+    public LoginUser(SysUser sysUser, List<String> permissions) {
+        this.sysUser = sysUser;
         this.permissions = permissions;
     }
 
@@ -59,13 +55,13 @@ public class LoginUser implements UserDetails{
     @Override
     //用于获取用户密码。由于使用的实体类是User，所以获取的是数据库的用户密码
     public String getPassword() {
-        return user.getPassword();
+        return sysUser.getPassword();
     }
 
     @Override
     //用于获取用户名。由于使用的实体类是User，所以获取的是数据库的用户名
     public String getUsername() {
-        return user.getUsername();
+        return sysUser.getUserName();
     }
 
     @Override

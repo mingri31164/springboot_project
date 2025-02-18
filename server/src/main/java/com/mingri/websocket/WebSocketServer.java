@@ -1,7 +1,6 @@
 package com.mingri.websocket;
 
 import org.springframework.stereotype.Component;
-
 import javax.websocket.OnClose;
 import javax.websocket.OnMessage;
 import javax.websocket.OnOpen;
